@@ -4,7 +4,7 @@ const ajv = new Ajv();
 
 const match = {
     schema(x, y, context = { path: '#' }) {
-        const newContext = _.assign(context);
+        const newContext = _.assign({}, context);
         if (context.path === '#') {
             ajv.compile(x);
             ajv.compile(y);
@@ -44,7 +44,7 @@ const match = {
     },
     properties(x, y, context) {
         for (const p of _.keys(x)) {
-            match.schema(x[p], y[p], _.assign(context, { path: context.path + '/' + p }));
+            match.schema(x[p], y[p], _.assign({ path: context.path + '/' + p }, context));
         }
     },
     object(x, y, context) {
@@ -56,7 +56,7 @@ const match = {
     },
     array(x, y, context) {
         if (!_.has(x, 'items') || !_.has(y, 'items')) throw(`${context}: items should be defined`);
-        match.schema(x.items, y.items, _.assign(context, { path: context.path + '/items' }));
+        match.schema(x.items, y.items, _.assign({ path: context.path + '/items' }, context));
     },
 }
 
