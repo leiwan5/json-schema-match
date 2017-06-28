@@ -30,7 +30,7 @@ const match = {
     },
     enum(x = [], y = [], context) {
         // x 可以是 y 的子集
-        if (_.difference(x, y).length > 0) throw(`${context.path}: required not match`);
+        if (_.difference(x, y).length > 0) throw(`${context.path}: enum not match`);
     },
     string(x, y, context) {
         match.enum(x.enum, y.enum, context);
