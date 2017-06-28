@@ -43,15 +43,15 @@ const match = {
         if (_.difference(x, y).length > 0) throw(`/${context.path}: required not match`);
     },
     properties(x, y, context) {
-        for (const p of _.keys(x)) {
+        for (const p of _.keys(y)) {
             match.schema(x[p], y[p], _.assign({ path: context.path + '/' + p }, context));
         }
     },
     object(x, y, context) {
         match.required(x.required, y.required, context);
         match.properties(
-            _.omit(x.properties, x.required),
-            _.omit(y.properties, x.required),
+            _.pick(x.properties, x.required),
+            _.pick(y.properties, x.required),
             context);
     },
     array(x, y, context) {
