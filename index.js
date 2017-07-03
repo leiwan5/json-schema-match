@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const Ajv = require('ajv');
 const ajv = new Ajv();
+ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'));
 
 // check if x contain's output values that y requires
 const match = {
@@ -50,7 +51,7 @@ const match = {
         const xp = x.properties;
         const yp = y.properties;
         const yk = _.keys(yp);
-        const yr = y.required;
+        const yr = y.required || [];
         if(_.difference(yr, yk).length > 0) {
             throw new Error(`${context.path}/properties/${_.difference(yr, yk)} is required but not used`);
         }
