@@ -43,9 +43,17 @@ const match = {
     },
     string(x, y, context) {
         match.enum(x.enum, y.enum, context);
+        return true;
     },
     number(x, y, context) {
         match.enum(x.enum, y.enum, context);
+        return true;
+    },
+    integer(x, y, context) {
+        return true;
+    },
+    boolean(x, y, context) {
+        return true;
     },
     object(x, y, context) {
         const xp = x.properties;
