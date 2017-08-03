@@ -1,6 +1,6 @@
 {
   "name": "json-schema-match",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A tool for comparing two json schemas.",
   "main": "index.js",
   "author": "Daniel King",

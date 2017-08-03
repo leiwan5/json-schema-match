@@ -54,26 +54,27 @@ const match = {
     object(x, y, context) {
         const xp = x.properties;
         const yp = y.properties;
+        const xk = _.keys(xp);
+        const xr = x.required || [];
         const yk = _.keys(yp);
         const yr = y.required || [];
         if(_.difference(yr, yk).length > 0) {
-            throw new Error(`${context.path}/properties/${_.difference(yr, yk)} is required but not used`);
+            throw new Error(`${context.path}/properties/${_.difference(yr, yk)} is required but not define`);
         }
         for(const p of yk ) {
-            // if y.p is required
-            if(yr && yr.indexOf(p) !== -1) {
-                //  if y.p is required && x.p does not exist
-                if(!xp[p]) {
-                    throw new Error(`${context.path}/properties/${p} is required but not exist`);
-                }
-                //  if y.p is required && x.p exist
+            // xr && !xe
+            if (xr.indexOf(p) > -1 && !xp[p]) {
+                throw new Error(`Merging Schema Context Error: ${context.path}/properties/${p} is required but not exist`);
+            // yr && !ye
+            } else if (yr.indexOf(p) > -1 && !yp[p]) {
+                console.log('this should not happen');
+                throw new Error(`InputSchema Error: ${context.path}/properties/${p} is required but not define`);
+            // !xr && !xe && yr && ye
+            } else if (xr.indexOf(p) === -1 && !xp[p] && yr.indexOf(p) > -1 && yp[p]) {
+                throw new Error(`Schema Context Error: ${context.path}/properties/${p} is required but not exist`);
+            // xe && ye
+            } else if (xp[p] && yp[p]) {
                 match.schema(xp[p], yp[p], _.assign({}, context, { path: context.path + '/properties/' + p }));
-            // if y.p is not required
-            } else {
-                // if y.p is not required && x.p exist && x.p.type is different with y.p.type
-                if(xp[p] && xp[p].type != yp[p].type) {
-                    throw new Error(`${context.path}/${p}'s type should be ${yp[p].type}`);
-                }
             }
         }
     },
